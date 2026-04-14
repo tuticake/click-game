@@ -106,7 +106,7 @@ button {
 
 const sound = new Audio("click.m4a");
 sound.volume = 0.5;
-sound.play();
+sound.play().catch(() => {});
 
       scoreDisplay.textContent = "スコア: " + score;
     }
