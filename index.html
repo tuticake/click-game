@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>クリック連打ゲーム</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      margin-top: 40px;
+    }
+
+    #gameArea {
+      margin-top: 30px;
+    }
+
+button {
+  padding: 30px 50px;
+  font-size: 28px;
+  width: 80%;
+  max-width: 300px;
+  touch-action: manipulation;
+}
+
+#clickBtn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  display: none;
+  padding: 60px 80px;
+  font-size: 32px;
+}
+
+    #startBtn {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+    }
+
+    #score, #timer, #highScore {
+      font-size: 24px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>クリック連打ゲーム</h1>
+
+  <div id="gameArea">
+    <button id="startBtn">スタート</button>
+    <button id="clickBtn">クリック！</button>
+
+    <div id="score">スコア: 0</div>
+    <div id="timer">残り時間: 10秒</div>
+    <div id="highScore">最高スコア: 0</div>
+  </div>
+
+<audio id="clickSound" src="click.m4a"></audio>
+
+  <script>
+    let score = 0;
+    let timeLeft = 10;
+    let timer;
+
+    const startBtn = document.getElementById("startBtn");
+    const clickBtn = document.getElementById("clickBtn");
+    const scoreDisplay = document.getElementById("score");
+    const timerDisplay = document.getElementById("timer");
+    const highScoreDisplay = document.getElementById("highScore");
+
+    // 初期表示
+    let highScore = localStorage.getItem("highScore") || 0;
+    highScoreDisplay.textContent = "最高スコア: " + highScore;
+
+    startBtn.addEventListener("click", startGame);
+    clickBtn.addEventListener("click", countClick);
+
+    function startGame() {
+      score = 0;
+      timeLeft = 10;
+
+      scoreDisplay.textContent = "スコア: 0";
+      timerDisplay.textContent = "残り時間: 10秒";
+
+      startBtn.style.display = "none";
+      clickBtn.style.display = "inline-block";
+
+      timer = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = "残り時間: " + timeLeft + "秒";
+
+        if (timeLeft <= 0) {
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function countClick() {
+      score++;
+
+const sound = new Audio("click.m4a");
+sound.volume = 0.5;
+sound.play();
+
+      scoreDisplay.textContent = "スコア: " + score;
+    }
+
+    function endGame() {
+      clearInterval(timer);
+
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem("highScore", highScore);
+        highScoreDisplay.textContent = "最高スコア: " + highScore;
+      }
+
+      clickBtn.style.display = "none";
+      startBtn.style.display = "inline-block";
+
+      alert("終了！あなたのスコアは " + score + " 回！");
+    }
+  </script>
+
+</body>
+</html>
